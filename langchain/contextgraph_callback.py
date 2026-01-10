@@ -55,7 +55,7 @@ class ContextGraphCallback(BaseCallbackHandler):
         self,
         api_key: Optional[str] = None,
         agent_id: Optional[str] = None,
-        api_url: str = "https://api.contextgraph.dev",
+        api_url: str = "https://contextgraph-api.fly.dev",
         log_llm_calls: bool = False,
         log_chain_calls: bool = True,
         auto_approve: bool = False,

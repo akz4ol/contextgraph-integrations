@@ -62,7 +62,7 @@ callback = ContextGraphCallback(
 |--------|---------|-------------|
 | `api_key` | `$CG_API_KEY` | ContextGraph API key |
 | `agent_id` | `$CG_AGENT_ID` | Registered agent ID |
-| `api_url` | `https://api.contextgraph.dev` | API endpoint |
+| `api_url` | `https://contextgraph-api.fly.dev` | API endpoint |
 | `log_llm_calls` | `False` | Log individual LLM calls |
 | `log_chain_calls` | `True` | Log chain executions |
 | `auto_approve` | `False` | Auto-approve decisions (testing) |
@@ -84,16 +84,10 @@ callback = ContextGraphCallback(
 
 ## Viewing Decisions
 
-After running your agent, view decisions in the ContextGraph dashboard:
-
-```
-https://cloud.contextgraph.dev/decisions
-```
-
-Or query via API:
+Query decisions via API:
 
 ```bash
-curl https://api.contextgraph.dev/v1/decisions \
+curl https://contextgraph-api.fly.dev/v1/decisions \
   -H "Authorization: Bearer $CG_API_KEY"
 ```
 
@@ -117,4 +111,4 @@ Now any attempt to use blocked tools will be logged and rejected.
 
 ## License
 
-MIT License - see LICENSE file.
+Apache 2.0 - see [LICENSE](../LICENSE).

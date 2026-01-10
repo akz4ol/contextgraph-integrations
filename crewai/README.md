@@ -76,7 +76,7 @@ result = crew.kickoff()
 |--------|---------|-------------|
 | `api_key` | `$CG_API_KEY` | ContextGraph API key |
 | `crew_id` | `$CG_CREW_ID` | Identifier for this crew |
-| `api_url` | `https://api.contextgraph.dev` | API endpoint |
+| `api_url` | `https://contextgraph-api.fly.dev` | API endpoint |
 | `log_tool_calls` | `True` | Log individual tool usages |
 | `log_agent_thoughts` | `True` | Log agent reasoning steps |
 | `auto_approve` | `False` | Auto-approve decisions (testing) |
@@ -98,16 +98,10 @@ observer = ContextGraphObserver(
 
 ## Viewing Decisions
 
-After running your crew, view decisions in the ContextGraph dashboard:
-
-```
-https://cloud.contextgraph.dev/decisions
-```
-
-Or query via API:
+Query decisions via API:
 
 ```bash
-curl https://api.contextgraph.dev/v1/decisions \
+curl https://contextgraph-api.fly.dev/v1/decisions \
   -H "Authorization: Bearer $CG_API_KEY"
 ```
 
@@ -138,7 +132,7 @@ After a crew run, you can retrieve the full audit trail:
 import httpx
 
 client = httpx.Client(
-    base_url="https://api.contextgraph.dev",
+    base_url="https://contextgraph-api.fly.dev",
     headers={"Authorization": f"Bearer {os.environ['CG_API_KEY']}"}
 )
 
@@ -152,4 +146,4 @@ for decision in decisions["data"]:
 
 ## License
 
-MIT License - see LICENSE file.
+Apache 2.0 - see [LICENSE](../LICENSE).

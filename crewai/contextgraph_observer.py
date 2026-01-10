@@ -62,7 +62,7 @@ class ContextGraphObserver:
         self,
         api_key: Optional[str] = None,
         crew_id: Optional[str] = None,
-        api_url: str = "https://api.contextgraph.dev",
+        api_url: str = "https://contextgraph-api.fly.dev",
         log_tool_calls: bool = True,
         log_agent_thoughts: bool = True,
         auto_approve: bool = False,
