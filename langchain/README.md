@@ -8,53 +8,35 @@ Automatically log all LangChain agent decisions to ContextGraph Cloud for audit 
 pip install contextgraph-langchain
 ```
 
-## Quick Start
+## Quick Start (LangChain v1+)
+
+LangChain v1 introduced a new middleware system. Use `contextgraph_middleware` with `create_agent()`:
 
 ```python
 import os
-from langchain.agents import AgentExecutor, create_openai_tools_agent
-from langchain_openai import ChatOpenAI
-from contextgraph_callback import ContextGraphCallback
+from langchain.agents import create_agent
+from contextgraph_middleware import contextgraph_middleware
 
-# Initialize the callback
-callback = ContextGraphCallback(
-    api_key=os.environ["CG_API_KEY"],
-    agent_id="my-langchain-agent"
+# Create agent with ContextGraph middleware
+agent = create_agent(
+    model="openai:gpt-4o",
+    tools=[search_tool, calculator_tool],
+    middleware=contextgraph_middleware(
+        api_key=os.environ["CG_API_KEY"],
+        agent_id="my-research-agent"
+    )
 )
 
-# Create your agent with the callback
-llm = ChatOpenAI(model="gpt-4")
-agent = create_openai_tools_agent(llm, tools, prompt)
-
-executor = AgentExecutor(
-    agent=agent,
-    tools=tools,
-    callbacks=[callback]  # Add the callback here
-)
-
-# Every tool call is now logged to ContextGraph
-result = executor.invoke({"input": "What's the weather in NYC?"})
+# Every model call and tool execution is now logged
+result = agent.invoke({"input": "What's the weather in NYC?"})
 ```
 
 ## What Gets Logged
 
-By default, the callback logs:
-
 | Event | Decision Type | What's Captured |
 |-------|---------------|-----------------|
-| Tool invocation | `tool_invocation` | Tool name, input, agent reasoning |
+| Model call | `model_call` | Message count, last message |
 | Tool execution | `tool_execution` | Tool name, input, output/error |
-| Chain execution | `chain_execution` | Chain name, inputs, outputs |
-
-Optionally, you can also log LLM calls:
-
-```python
-callback = ContextGraphCallback(
-    api_key=os.environ["CG_API_KEY"],
-    agent_id="my-agent",
-    log_llm_calls=True  # Enable LLM call logging
-)
-```
 
 ## Configuration Options
 
@@ -63,15 +45,17 @@ callback = ContextGraphCallback(
 | `api_key` | `$CG_API_KEY` | ContextGraph API key |
 | `agent_id` | `$CG_AGENT_ID` | Registered agent ID |
 | `api_url` | `https://contextgraph-api.fly.dev` | API endpoint |
-| `log_llm_calls` | `False` | Log individual LLM calls |
-| `log_chain_calls` | `True` | Log chain executions |
+| `log_model_calls` | `True` | Log model invocations |
+| `log_tool_calls` | `True` | Log tool executions |
 | `auto_approve` | `False` | Auto-approve decisions (testing) |
 | `metadata` | `{}` | Additional metadata for all decisions |
 
 ## Adding Custom Metadata
 
 ```python
-callback = ContextGraphCallback(
+from contextgraph_middleware import contextgraph_middleware
+
+middleware = contextgraph_middleware(
     api_key=os.environ["CG_API_KEY"],
     agent_id="trading-bot",
     metadata={
@@ -81,6 +65,28 @@ callback = ContextGraphCallback(
     }
 )
 ```
+
+## Legacy Support (LangChain < 1.0)
+
+For older LangChain versions using `AgentExecutor`, use the callback handler:
+
+```python
+from langchain.agents import AgentExecutor
+from contextgraph_callback import ContextGraphCallback
+
+callback = ContextGraphCallback(
+    api_key=os.environ["CG_API_KEY"],
+    agent_id="my-agent"
+)
+
+executor = AgentExecutor(
+    agent=agent,
+    tools=tools,
+    callbacks=[callback]
+)
+```
+
+> **Note:** `AgentExecutor` is deprecated in LangChain v1. Migrate to `create_agent()` with middleware for new projects.
 
 ## Viewing Decisions
 

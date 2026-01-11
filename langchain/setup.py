@@ -10,9 +10,9 @@ setup(
     author_email="blog.mot2gmob@gmail.com",
     url="https://github.com/akz4ol/contextgraph-integrations",
     packages=find_packages(),
-    py_modules=["contextgraph_callback"],
+    py_modules=["contextgraph_callback", "contextgraph_middleware"],
     install_requires=[
-        "langchain-core>=0.1.0",
+        "langchain>=1.0.0",
         "httpx>=0.25.0",
     ],
     extras_require={
