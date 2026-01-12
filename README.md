@@ -14,18 +14,22 @@ Official Python integrations for [ContextGraph Cloud](https://contextgraph.dev) 
 ### LangChain
 
 ```python
-from langchain.agents import AgentExecutor
-from contextgraph_callback import ContextGraphCallback
+from langchain_openai import ChatOpenAI
+from langgraph.prebuilt import create_react_agent
+from contextgraph_langchain import ContextGraphCallback
 
 callback = ContextGraphCallback(
     api_key="your-api-key",
     agent_id="my-agent"
 )
 
-executor = AgentExecutor(
-    agent=agent,
-    tools=tools,
-    callbacks=[callback]
+llm = ChatOpenAI(model="gpt-4o")
+agent = create_react_agent(llm, tools)
+
+# Run with callback
+result = agent.invoke(
+    {"messages": [("user", "What's the weather?")]},
+    config={"callbacks": [callback]}
 )
 ```
 
